@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Galaxy Delivery • Multiplication Mission</title>
+<style>
+:root{--bg:#0b142b;--card:#15223e;--line:#344566;--text:#f3f6ff;--muted:#b9c8e4;--mint:#79efd1;--gold:#ffcf75;--pink:#ffa9c5}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top right,#243266,transparent 60%),var(--bg);color:var(--text);font:17px/1.5 system-ui,sans-serif;min-height:100vh}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:0;border-radius:12px;padding:12px 19px;background:var(--mint);color:#082b2c;font-weight:750}
+button:hover{filter:brightness(1.08)}
+button:disabled{opacity:.5;cursor:default}
+button.secondary{background:#253858;color:var(--text);border:1px solid #526789}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outline-offset:4px}
+main{max-width:1040px;margin:auto;padding:30px 22px 55px}
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:25px}
+.brand{font-size:13px;text-transform:uppercase;letter-spacing:3px;color:var(--mint);font-weight:800}
+h1{font-size:clamp(32px,5vw,52px);line-height:1.1;letter-spacing:-1.8px;margin:12px 0 16px}
+h2{font-size:25px;line-height:1.2;margin:8px 0 16px}
+h3{font-size:18px;margin:0 0 10px}
+p{margin:8px 0 16px}
+.muted{color:var(--muted)}
+.tag{color:var(--gold);border:1px solid #65583f;padding:7px 13px;border-radius:30px;font-size:13px;white-space:nowrap}
+.card{background:rgba(21,34,62,.96);border:1px solid var(--line);border-radius:22px;padding:26px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:1.25fr 1fr;gap:20px}
+label{display:block;font-size:14px;font-weight:700;margin-bottom:7px}
+input,select,textarea{background:#0c1830;border:1px solid #617392;color:var(--text);border-radius:10px;padding:12px;width:100%}
+select option{background:#15223e}
+.field{margin:20px 0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:20px}
+.small{font-size:14px}
+.example{background:#0c1830;border-radius:16px;padding:20px}
+.eq{font-variant-numeric:tabular-nums;font-weight:750;font-size:24px;margin:12px 0}
+.orbit{display:flex;justify-content:space-between;gap:5px;margin:22px 0}
+.stop{flex:1;text-align:center;font-size:12px;color:var(--muted)}
+.planet{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;margin:0 auto 6px;background:#293b61;border:2px solid #526789;font-size:17px}
+.stop.current .planet{border-color:var(--gold);box-shadow:0 0 0 5px #ffcf7514}
+.stop.done .planet{background:var(--mint);color:#092a2c;border-color:var(--mint)}
+.stats{display:flex;gap:12px;flex-wrap:wrap}
+.stat{background:#0c1830;border-radius:12px;padding:10px 16px}
+.stat strong{color:var(--mint)}
+.math{font-size:clamp(35px,7vw,58px);font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:1px;margin:18px 0}
+.step-label{color:var(--gold);font-weight:750;font-size:13px;text-transform:uppercase;letter-spacing:1px}
+#answer{font-size:26px;max-width:280px}
+.feedback{border-radius:12px;padding:13px 16px;margin-top:16px;background:#0c1830}
+.feedback.good{border-left:4px solid var(--mint);color:#b4ffe9}
+.feedback.try{border-left:4px solid var(--gold);color:#ffe0a4}
+.hint{background:#283851;border-radius:12px;padding:16px;margin-top:15px}
+.row{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border:0}
+.row strong{white-space:nowrap}
+.badge{font-size:55px;margin:10px 0}
+.progress-track{height:8px;background:#0b142b;border-radius:8px;overflow:hidden;margin:18px 0}
+.progress-fill{height:100%;background:var(--mint);transition:width .3s}
+.hidden{display:none!important}
+textarea{min-height:105px;resize:vertical}
+details{margin-top:18px}
+summary{cursor:pointer;color:var(--muted);font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:14px;margin-top:20px}
+th,td{text-align:left;border-bottom:1px solid var(--line);padding:10px 6px}
+.note{border-left:3px solid var(--mint);padding-left:15px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.card{padding:20px}header{align-items:flex-start}.tag{font-size:11px}.orbit .stop{font-size:10px}.planet{width:30px;height:30px}main{padding:20px 14px}table{font-size:12px}}
+@media print{body{background:white;color:#111}header,#setup,#game,.actions{display:none!important}main{max-width:none;padding:0}.card{background:white;border:1px solid #aaa;color:#111}.muted,th,td{color:#222}.stat{background:#eee}.stat strong{color:#111}th,td{border-color:#bbb}.badge{font-size:30px}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div><div class="brand">Galaxy Delivery</div><div class="muted small">Big numbers. One mission at a time.</div></div>
+<span class="tag">No timer • Unlimited retries</span>
+</header>
+
+<section id="setup">
+<div class="grid">
+<div class="card">
+<div class="brand">Multiplication adventure</div>
+<h1>Your cargo.<br>Eight planets.<br>Let’s multiply.</h1>
+<p class="muted">The galaxy needs supplies! Multiply the number of crates by the supplies in each crate to complete every delivery.</p>
+<div class="field"><label for="pilot">Pilot name (optional)</label><input id="pilot" maxlength="35" placeholder="Enter your name" autocomplete="off"></div>
+<div class="field"><label for="level">Choose your mission</label><select id="level">
+<option value="rookie">Launch Pad: 2-digit × 1-digit</option>
+<option value="explorer" selected>Planet Explorer: 2-digit × 2-digit</option>
+<option value="captain">Star Captain: 3-digit × 2-digit</option>
+</select></div>
+<button id="start">Launch mission →</button>
+<p class="muted small" style="margin-top:15px">About 15–25 minutes • Paper and pencil welcome</p>
+</div>
+<div class="card">
+<div class="badge" aria-hidden="true">🛸</div>
+<h2>How to make a delivery</h2>
+<p>Break the multiplier into place values. Find each partial product, then combine them.</p>
+<div class="example">
+<div class="step-label">Example: 24 × 13</div>
+<div class="eq">24 × 3 = 72</div>
+<div class="eq">24 × 10 = 240</div>
+<div class="eq">72 + 240 = 312</div>
+<p class="muted small">The 1 in 13 represents <strong>10</strong>, so the second partial product is 240.</p>
+</div>
+<p class="small muted" style="margin-top:20px">Earn 3 stars for a delivery with every step correct on the first try, 2 after retries, or 1 with a hint or revealed step. Every completed delivery counts!</p>
+</div>
+</div>
+</section>
+
+<section id="game" class="hidden">
+<div class="stats">
+<div class="stat">Delivered <strong id="delivered">0 / 8</strong></div>
+<div class="stat">Stars <strong id="stars">0</strong> / 24</div>
+<div class="stat" id="levelName"></div>
+</div>
+<div class="orbit" id="map" aria-label="Delivery progress"></div>
+<div class="grid">
+<div class="card">
+<div class="step-label" id="missionLabel"></div>
+<h2 id="planetTitle"></h2>
+<p id="story" class="muted"></p>
+<div class="math" id="problem"></div>
+<div class="progress-track"><div id="stepProgress" class="progress-fill"></div></div>
+<div class="step-label" id="stepLabel"></div>
+<p id="prompt"></p>
+<form id="answerForm" novalidate>
+<label for="answer" id="answerLabel">Your partial product</label>
+<input id="answer" type="text" inputmode="numeric" autocomplete="off" placeholder="Type a number">
+<div class="actions">
+<button id="check" type="submit">Check answer</button>
+<button id="hintBtn" type="button" class="secondary">Place-value hint</button>
+<button id="revealBtn" type="button" class="secondary hidden">Show this step</button>
+</div>
+</form>
+<div id="feedback" class="feedback hidden" role="status" aria-live="polite"></div>
+<div id="hint" class="hint hidden"></div>
+<button id="next" class="hidden" style="margin-top:18px">Next step →</button>
+</div>
+<aside>
+<div class="card">
+<h3>📦 Delivery manifest</h3>
+<p class="small muted">Build your multiplication one part at a time.</p>
+<div id="manifest"></div>
+<div id="totalLine" class="row"><span>Total supplies</span><strong>?</strong></div>
+</div>
+<div class="card">
+<h3>Flight tip</h3>
+<p class="small note" id="tip"></p>
+<details><summary>Open a scratchpad</summary><label for="scratch" style="margin-top:12px">Your working notes</label><textarea id="scratch" placeholder="Use this space, or work on paper."></textarea></details>
+<p class="muted small" style="margin-top:15px">This session stays in this tab. Restarting or refreshing clears your work.</p>
+</div>
+</aside>
+</div>
+</section>
+
+<section id="finish" class="hidden">
+<div class="card">
+<div class="brand">Mission complete</div>
+<div class="badge" aria-hidden="true">🏆</div>
+<h1>Galaxy supplied!</h1>
+<p id="congrats"></p>
+<div class="stats">
+<div class="stat">Deliveries <strong>8 / 8</strong></div>
+<div class="stat">Stars <strong id="finalStars"></strong></div>
+<div class="stat">First-try deliveries <strong id="firstTry"></strong></div>
+</div>
+<p id="reflection" class="note" style="margin-top:24px"></p>
+<div style="overflow-x:auto">
+<table>
+<thead><tr><th>Planet</th><th>Multiplication</th><th>Product</th><th>Practice record</th></tr></thead>
+<tbody id="results"></tbody>
+</table>
+</div>
+<p class="muted small" style="margin-top:18px">A first-try delivery means all its steps were correct on the first attempt without hints. This report describes this practice session.</p>
+<div class="actions">
+<button id="again">Play another mission</button>
+<button class="secondary" id="print">Print report</button>
+</div>
+</div>
+</section>
+</main>
+<script>
+(() => {
+'use strict';
+const $ = id => document.getElementById(id);
+const planets = ['Pebble','Fern','Coral','Amber','Nimbus','Aurora','Nova','Haven'];
+const icons = ['🪨','🌱','🪸','🟠','☁️','🌌','⭐','🏡'];
+const supplies = ['water bottles','seed packets','meal packs','solar cells','tool kits','air filters','science kits','medical packs'];
+const levels = {
+rookie:{name:'Launch Pad',minA:12,maxA:99,minB:2,maxB:9},
+explorer:{name:'Planet Explorer',minA:12,maxA:99,minB:12,maxB:99},
+captain:{name:'Star Captain',minA:112,maxA:999,minB:12,maxB:99}
+};
+let config, pilot, missions, index, stage, steps, solved, misses, assisted, starTotal, records, locked;
+const rand=(lo,hi)=>Math.floor(Math.random()*(hi-lo+1))+lo;
+const fmt=n=>n.toLocaleString('en-US');
+function makeMissions(){
+ const seen=new Set(), list=[];
+ while(list.length<8){
+  const a=rand(config.minA,config.maxA),b=rand(config.minB,config.maxB);
+  if(b%10===0 || seen.has(a+'x'+b))continue;
+  seen.add(a+'x'+b);list.push({a,b});
+ }
+ return list;
+}
+function map(){
+ $('map').innerHTML=planets.map((name,i)=>`<div class="stop ${i<index?'done':i===index?'current':''}" ${i===index?'aria-current="step"':''}><div class="planet">${i<index?'✓':i+1}</div>${name}</div>`).join('');
+}
+function start(){
+ config=levels[$('level').value];pilot=$('pilot').value.trim();
+ missions=makeMissions();index=0;starTotal=0;records=[];
+ $('setup').classList.add('hidden');$('finish').classList.add('hidden');$('game').classList.remove('hidden');
+ $('levelName').textContent=config.name;
+ loadMission();
+}
+function loadMission(){
+ const {a,b}=missions[index];
+ steps=[{factor:b%10,place:'ones'}];
+ if(b>=10)steps.push({factor:Math.floor(b/10)*10,place:'tens'});
+ solved=[];stage=0;misses=0;assisted=false;$('scratch').value='';
+ $('missionLabel').textContent=`Delivery ${index+1} of 8`;
+ $('planetTitle').textContent=`${icons[index]} ${planets[index]} Station`;
+ $('story').textContent=`Deliver ${b} crates with ${a} ${supplies[index]} in each crate. How many ${supplies[index]} is that altogether?`;
+ $('problem').textContent=`${a} × ${b}`;
+ $('tip').textContent=b>=10?'The tens digit stands for groups of ten. For example, multiplying by 40 means multiplying by 4, then by 10.':'Break the larger number into hundreds, tens, and ones if needed. Multiply each part, then add the parts.';
+ $('delivered').textContent=`${index} / 8`;$('stars').textContent=starTotal;
+ map();renderStep();
+}
+function manifest(){
+ const {a}=missions[index];
+ $('manifest').innerHTML=steps.map((s,i)=>`<div class="row"><span>${a} × ${s.factor}<br><span class="small muted">${s.place} part</span></span><strong>${solved[i]===undefined?'?':fmt(solved[i])}</strong></div>`).join('');
+ $('totalLine').lastElementChild.textContent=stage>steps.length?fmt(a*missions[index].b):'?';
+}
+function renderStep(){
+ locked=false;
+ $('answer').value='';$('answer').disabled=false;
+ $('check').disabled=false;$('hintBtn').disabled=false;
+ ['feedback','hint','next','revealBtn'].forEach(id=>$(id).classList.add('hidden'));
+ $('stepProgress').style.width=`${stage/(steps.length+1)*100}%`;
+ const {a,b}=missions[index],isTotal=stage===steps.length;
+ $('stepLabel').textContent=`Step ${stage+1} of ${steps.length+1} • ${isTotal?'Complete the delivery':steps[stage].place+' partial product'}`;
+ $('prompt').textContent=isTotal?(steps.length>1?'Add your partial products. What is the total?':'Use your partial product to state the total number of supplies.'):`Find ${a} × ${steps[stage].factor}.`;
+ $('answerLabel').textContent=isTotal?'Total supplies':'Your partial product';
+ manifest();$('answer').focus();
+}
+function expected(){
+ const {a,b}=missions[index];
+ return stage===steps.length?a*b:a*steps[stage].factor;
+}
+function feedback(message,good){
+ $('feedback').textContent=message;$('feedback').className='feedback '+(good?'good':'try');
+}
+function accept(revealed){
+ const totalStep=stage===steps.length;
+ locked=true;$('answer').disabled=true;$('check').disabled=true;$('hintBtn').disabled=true;
+ $('revealBtn').classList.add('hidden');
+ if(!totalStep)solved[stage]=expected();
+ feedback(revealed?`This step is ${fmt(expected())}. Read the hint to see how it works, then continue.`:totalStep?'Delivery confirmed! Your multiplication is correct.':'Correct! That partial product is ready.',true);
+ if(totalStep){
+  const earned=assisted?1:misses?2:3;
+  starTotal+=earned;
+  const {a,b}=missions[index];
+  records.push({a,b,stars:earned,misses,assisted});
+  $('stars').textContent=starTotal;$('delivered').textContent=`${index+1} / 8`;
+  $('totalLine').lastElementChild.textContent=fmt(expected());
+  feedback(`Delivery confirmed! ${'★'.repeat(earned)} You earned ${earned} ${earned===1?'star':'stars'}.`,true);
+ }
+ manifest();
+ if(totalStep)$('totalLine').lastElementChild.textContent=fmt(expected());
+ $('stepProgress').style.width=`${(stage+1)/(steps.length+1)*100}%`;
+ $('next').textContent=totalStep?(index===7?'View mission report →':'Fly to next planet →'):'Next step →';
+ $('next').classList.remove('hidden');$('next').focus();
+}
+function check(event){
+ event.preventDefault();if(locked)return;
+ const raw=$('answer').value.trim();
+ if(!/^\d+$/.test(raw)){feedback('Enter a whole number using digits only. Leave out commas.',false);return;}
+ if(Number(raw)===expected()){accept(false);return;}
+ misses++;
+ feedback(stage===steps.length?'Try again. Add the partial products carefully, lining up the place values.':steps[stage].place==='tens'?'Try again. This factor represents tens. Remember to multiply by the full value, such as 30 instead of 3.':'Try again. Break the larger number into place values, multiply each part, then add.',false);
+ if(misses>=2)$('revealBtn').classList.remove('hidden');
+ $('answer').select();
+}
+function hint(){
+ assisted=true;
+ const {a,b}=missions[index];
+ let message;
+ if(stage===steps.length){
+  message=steps.length>1?`Combine the parts: ${solved.map(fmt).join(' + ')}. Add ones to ones, tens to tens, and hundreds to hundreds.`:`The total is the partial product you already found: ${fmt(solved[0])}.`;
+ } else {
+  const s=steps[stage];
+  const parts=[Math.floor(a/100)*100,Math.floor(a%100/10)*10,a%10].filter(Boolean);
+  message=`Break ${a} into ${parts.join(' + ')}. Then calculate ${parts.map(n=>`(${n} × ${s.factor})`).join(' + ')}.`;
+  if(s.place==='tens')message+=` The ${Math.floor(b/10)} in ${b} represents ${s.factor}, so multiply by ${s.factor}, not ${Math.floor(b/10)}.`;
+ }
+ $('hint').textContent=message;$('hint').classList.remove('hidden');
+}
+function next(){
+ if(!locked)return;
+ if(stage<steps.length){stage++;renderStep();}
+ else if(index<7){index++;loadMission();}
+ else finish();
+}
+function finish(){
+ $('game').classList.add('hidden');$('finish').classList.remove('hidden');
+ $('congrats').textContent=`${pilot?pilot+', you':'You'} completed all eight deliveries on the ${config.name} mission.`;
+ $('finalStars').textContent=`${starTotal} / 24`;
+ const first=records.filter(r=>r.stars===3).length;
+ $('firstTry').textContent=`${first} / 8`;
+ $('reflection').textContent=first>=6?'Strong flying! For an extra challenge, explain why the tens partial product has a zero in the ones place.':'Keep building your place-value skills. Choose one delivery from your report and explain how its partial products combine to make the full product.';
+ $('results').innerHTML=records.map((r,i)=>`<tr><td>${planets[i]}</td><td>${r.a} × ${r.b}</td><td>${fmt(r.a*r.b)}</td><td>${r.stars===3?'First try':r.assisted?'Used support':'Retried'} · ${'★'.repeat(r.stars)}</td></tr>`).join('');
+ $('again').focus();
+}
+$('start').addEventListener('click',start);
+$('answerForm').addEventListener('submit',check);
+$('hintBtn').addEventListener('click',hint);
+$('revealBtn').addEventListener('click',()=>{if(!locked){hint();$('answer').value=expected();accept(true);}});
+$('next').addEventListener('click',next);
+$('again').addEventListener('click',()=>{$('finish').classList.add('hidden');$('setup').classList.remove('hidden');$('start').focus();});
+$('print').addEventListener('click',()=>window.print());
+})();
+</script>
+</body>
+</html>
